@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta
+            name="description"
+            content="List of Judges"
+        />
+    </head>
+    <body>
+        <div id = "root"></div>
+    </body>
+    <script>
+        function renderJudges(judges) {
+            var judgeList = `<div id = "${judges[0]}"><a href = "form.html?var=${judges[0]}">${judges[0]}</a></div>`;
+            if (judges.length > 1) {
+                for (var i = 1; i < judges.length; i++) {
+                    var addition = `<div id = "${judges[i]}"><a href = "form.html?var=${judges[i]}">${judges[i]}</a></div>`;
+                    judgeList += addition;
+                }
+            }
+            document.getElementById("root").innerHTML = judgeList;
+        }
+
+        var test = renderJudges(["Bob", "Joe", "Moe"]);
+    </script>
+</html>

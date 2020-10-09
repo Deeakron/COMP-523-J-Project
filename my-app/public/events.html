@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang=en>
+    <head>
+        <meta charset="utf-8" />
+        <link rel="icon" href="%PUBLIC_URL%/favicon.ico" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="theme-color" content="#000000" />
+        <meta
+            name="description"
+            content="List of Events"
+        />
+    </head>
+    <body>
+        <div id = "root"></div>
+    </body>
+    <script>
+        function renderEvents(events) {
+            var eventList = `<div id = "${events[0]}"><a href = "judges.html?var=${events[0]}">${events[0]}</a></div>`;
+            if (events.length > 1) {
+                for (var i = 1; i < events.length; i++) {
+                    var addition = `<div id = "${events[i]}"><a href = "judges.html?var=${events[i]}">${events[i]}</a></div>`;
+                    eventList += addition;
+                }
+            }
+            document.getElementById("root").innerHTML = eventList;
+        }
+
+        var test = renderEvents(["Canada @ SMU Sobey", "Central @ McCombs", "Mid-Atlantic @ John Hopkins"]);
+        //document.getElementById("root").(test);
+    </script>
+</html>
