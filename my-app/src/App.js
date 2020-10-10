@@ -6,12 +6,6 @@ import * as spreadsheet from "./spreadsheet";
 
 (async () => {
   var sheetId = '194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM';
-  var title = await spreadsheet.getTitle(sheetId);
-  console.log(title);
-  var judges = await spreadsheet.getJudges(sheetId);
-  console.log(judges);
-  var participants = await spreadsheet.getParticipants(sheetId);
-  console.log(participants);
   //await spreadsheet.vote(sheetId, 'Judge A', 'Due Diligence', 'Elm', 'Birch', 'Fir');
   //await spreadsheet.vote(sheetId, 'Judge B', 'Partner Meeting', 'Birch', 'Ash', 'Dogwood');
   //await spreadsheet.vote(sheetId, 'Judge C', 'Written Deliverables', 'Dogwood', 'Birch', 'Cherry');
