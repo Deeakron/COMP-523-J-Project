@@ -1,26 +1,38 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
 import logo from './logo.svg';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  let teams = [{"name": "team 1"}, {"name": "team 2"}, {"name": "team 3"}];
+  //var teamData = JSON.parse(teams);
+  let formSections = [];
+  for(let i=0; i<teams.length;i++){
+    formSections[i] = renderFormSection(teams[i].name);
+  }
+  //alert("yay!");
+  return formSections;
+    
 }
+
+const renderFormSection = function(team) {
+  let form = `<p>${team}</p>`;
+  let form1 = `<input type="radio" id =${team + " 1"} name=${team} value=${team + " 1"} />`;
+  let form2 = `<input type="radio" id =${team + " 2"} name=${team} value=${team + " 2"} />`;
+  let form3 = `<input type="radio" id =${team + " 3"} name=${team} value=${team + " 3"} />`;
+  return {
+      form,
+      form1,
+      form2,
+      form3
+  };
+}
+
+
+/**
+* 
+* @param teams JSON file of the teams
+*/
+
 
 export default App;

@@ -26,7 +26,11 @@ document.body.onload = function () {
     for(let i=0; i<teams.length;i++){
         formSections[i] = renderFormSection(teams[i].name);
     }
-    document.getElementById('vote').appendChild(formSections);
+    alert("yay!");
+    ReactDOM.render(
+        formSections,
+        document.getElementById('vote')
+      )
     
 }
 
