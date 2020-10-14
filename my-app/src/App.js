@@ -40,10 +40,14 @@ class App extends Component {
 
   render() {
 
-
-    const listJudges = this.state.judges.map((judge) =>
-      <li><a href="/?vote=true">{judge}</a></li>
+    const listURL = this.state.judges.map((judge) =>
+      ["/?vote=true?judge=" + judge,judge]
     );
+
+    const listJudges = listURL.map((url) =>
+      <li><a href={url[0]}>{url[1]}</a></li>
+    );
+    
     const listParticipants = this.state.participants.map((participant) =>
       <li>{participant}</li>
     );
