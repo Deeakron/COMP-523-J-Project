@@ -4,8 +4,6 @@ import "./App.css";
 
 import * as spreadsheet from "./spreadsheet";
 
-var sheetId
-
 (async () => {
   var sheetId = '194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM';
   //await spreadsheet.vote(sheetId, 'Judge A', 'Due Diligence', 'Elm', 'Birch', 'Fir');
@@ -14,6 +12,8 @@ var sheetId
   //await spreadsheet.vote(sheetId, 'Judge D', 'Due Diligence', 'Cherry', 'Dogwood', 'Ash');
   //await spreadsheet.vote(sheetId, 'Judge E', 'Partner Meeting', 'Ash', 'Fir', 'Elm');
 })();
+
+var sheetId;
 
 class App extends Component {
   constructor() {
@@ -24,25 +24,25 @@ class App extends Component {
   async componentDidMount() {
     var url = new URL(window.location.href);
     
-    if (url.searchParams.get('sheetId')) {
-      this.setState({'sheetId': url.searchParams.get('sheetId')});
-      const title = await spreadsheet.getTitle(this.state.sheetId);
+    //if (url.searchParams.get('sheetId')) {
+      sheetId = url.searchParams.get('sheetId');
+      const title = await spreadsheet.getTitle(sheetId);
       this.setState({'title': title});
       var judges = [];
       if (!url.searchParams.get('vote')) {
-        judges = await spreadsheet.getJudges(this.state.sheetId);
+        judges = await spreadsheet.getJudges(sheetId);
       }
       this.setState({'judges': judges});
       var participants = [];
       if (url.searchParams.get('vote')) {
-        participants = await spreadsheet.getParticipants(this.state.sheetId);
+        participants = await spreadsheet.getParticipants(sheetId);
       }
       this.setState({ 'participants': participants});
 
       if (url.searchParams.get('vote')) {
         this.setState({ 'voting': true});
       }
-    }
+    //}
     
   }
 
@@ -110,7 +110,7 @@ class SubmitButton extends React.Component {
     //console.log(this.props.value[1]);
     //console.log(this.state.parent['1button'].value);
 
-    submit(this.state.parent, this.props.value[1], this.state.sheetId);
+    submit(this.state.parent, this.props.value[1], sheetId);
   }
 
   render() {
