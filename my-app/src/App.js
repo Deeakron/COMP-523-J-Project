@@ -18,7 +18,7 @@ var sheetId;
 class App extends Component {
   constructor() {
     super();
-    this.state = { sheetId: "", title: "", judges: [], participants: [], voting: false};
+    this.state = { sheetId: "", thisJudge: "", title: "", judges: [], participants: [], voting: false};
   }
 
   async componentDidMount() {
@@ -26,6 +26,9 @@ class App extends Component {
     
     if (url.searchParams.get('sheetId')) {
       sheetId = url.searchParams.get('sheetId');
+      if (url.searchParams.get('judge')) {
+        this.setState({'thisJudge': url.searchParams.get('judge')});
+      }
       const title = await spreadsheet.getTitle(sheetId);
       this.setState({'title': title});
       var judges = [];
@@ -60,7 +63,7 @@ class App extends Component {
       formPart2 = this.state.participants.map((participant) =>
         <li>{generateRadioButtons(participant)}</li>
       )
-      formPart3 = <SubmitButton value={'Judge A'}/>;
+      formPart3 = <SubmitButton value={this.state.thisJudge}/>;
     }
 
     const listParticipants = this.state.participants.map((participant) =>
