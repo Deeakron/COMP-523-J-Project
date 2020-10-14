@@ -4,6 +4,8 @@ import "./App.css";
 
 import * as spreadsheet from "./spreadsheet";
 
+var sheetId
+
 (async () => {
   var sheetId = '194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM';
   //await spreadsheet.vote(sheetId, 'Judge A', 'Due Diligence', 'Elm', 'Birch', 'Fir');
@@ -16,29 +18,32 @@ import * as spreadsheet from "./spreadsheet";
 class App extends Component {
   constructor() {
     super();
-    this.state = { title: "", judges: [], participants: [], voting: false};
+    this.state = { sheetId: "", title: "", judges: [], participants: [], voting: false};
   }
 
   async componentDidMount() {
     var url = new URL(window.location.href);
     
-    var sheetId = '194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM';
-    const title = await spreadsheet.getTitle(sheetId);
-    this.setState({'title': title});
-    var judges = [];
-    if (!url.searchParams.get('vote')) {
-      judges = await spreadsheet.getJudges(sheetId);
-    }
-    this.setState({'judges': judges});
-    var participants = [];
-    if (url.searchParams.get('vote')) {
-      participants = await spreadsheet.getParticipants(sheetId);
-    }
-    this.setState({ 'participants': participants});
+    if (url.searchParams.get('sheetId')) {
+      this.setState({'sheetId': url.searchParams.get('sheetId')});
+      const title = await spreadsheet.getTitle(this.state.sheetId);
+      this.setState({'title': title});
+      var judges = [];
+      if (!url.searchParams.get('vote')) {
+        judges = await spreadsheet.getJudges(this.state.sheetId);
+      }
+      this.setState({'judges': judges});
+      var participants = [];
+      if (url.searchParams.get('vote')) {
+        participants = await spreadsheet.getParticipants(this.state.sheetId);
+      }
+      this.setState({ 'participants': participants});
 
-    if (url.searchParams.get('vote')) {
-      this.setState({ 'voting': true});
+      if (url.searchParams.get('vote')) {
+        this.setState({ 'voting': true});
+      }
     }
+    
   }
 
 
@@ -101,10 +106,11 @@ class SubmitButton extends React.Component {
     };
   }
 
-  handleClick = () => {
+  handleClick = async () => {
     //console.log(this.props.value[1]);
     //console.log(this.state.parent['1button'].value);
-    submit(this.state.parent, this.props.value[1], this.props.value[0]);
+
+    submit(this.state.parent, this.props.value[1], this.state.sheetId);
   }
 
   render() {
