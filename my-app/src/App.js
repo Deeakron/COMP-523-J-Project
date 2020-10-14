@@ -52,9 +52,16 @@ class App extends Component {
 
 
   render() {
-    const listJudges = this.state.judges.map((judge) =>
-      <li><a href="/?vote=true">{judge}</a></li>
+    const listURL = this.state.judges.map((judge) =>
+      [`/?sheetId=${sheetId}&judge=${judge}&vote=true`,judge]
     );
+
+    const listJudges = listURL.map((url) =>
+      <li><a href={url[0]}>{url[1]}</a></li>
+    );
+    /*const listJudges = this.state.judges.map((judge) =>
+      <li><a href="/?vote=true">{judge}</a></li>
+    );*/
     var formPart1 = <div></div>;
     var formPart2 = <div></div>;
     var formPart3 = <div></div>;
@@ -108,7 +115,7 @@ class SubmitButton extends React.Component {
   }
 
   handleClick = async () => {
-    console.log(this.props.value);
+    //console.log(this.props.value);
     //console.log(this.state.parent['1button'].value);
 
     submit(this.state.parent, this.props.value, sheetId);
