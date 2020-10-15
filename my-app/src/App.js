@@ -15,10 +15,11 @@ import * as spreadsheet from "./spreadsheet";
 
 var sheetId;
 
+var section = <div></div>;
 class App extends Component {
   constructor() {
     super();
-    this.state = { sheetId: "", thisJudge: "", title: "", judges: [], participants: [], voting: false};
+    this.state = { sheetId: "", thisJudge: "", title: "", judges: [], participants: [], page: 'judges'};
   }
 
   async componentDidMount() {
@@ -43,12 +44,11 @@ class App extends Component {
       this.setState({ 'participants': participants});
 
       if (url.searchParams.get('vote')) {
-        this.setState({ 'voting': true});
+        this.setState({ 'page': 'voting'});
       }
     }
     
   }
-
 
 
   render() {
@@ -65,12 +65,16 @@ class App extends Component {
     var formPart1 = <div></div>;
     var formPart2 = <div></div>;
     var formPart3 = <div></div>;
-    if (this.state.voting) {
+    if (this.state.page == 'voting') {
+      section = <form id='form'></form>;
       formPart1 = formPart;
       formPart2 = this.state.participants.map((participant) =>
         <li>{generateRadioButtons(participant)}</li>
       )
       formPart3 = <SubmitButton value={this.state.thisJudge}/>;
+      section = <div>{formPart1}{formPart2}{formPart3}</div>;
+    } else if (this.state.page == 'judges') {
+      section = <ul>{listJudges}</ul>;
     }
 
     const listParticipants = this.state.participants.map((participant) =>
@@ -82,9 +86,7 @@ class App extends Component {
         <header className="App-header">
           <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">{this.state.title}</h1>
-          <ul>{listJudges}</ul>
-          <ul>{listParticipants}</ul>
-          <form id='form'>{formPart1}{formPart2}{formPart3}</form>
+          <div><form id='form'>{section}</form></div>
         </header>
       </div>
     );
@@ -117,7 +119,6 @@ class SubmitButton extends React.Component {
   handleClick = async () => {
     //console.log(this.props.value);
     //console.log(this.state.parent['1button'].value);
-
     submit(this.state.parent, this.props.value, sheetId);
   }
 
