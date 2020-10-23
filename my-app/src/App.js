@@ -46,6 +46,9 @@ class App extends Component {
       if (url.searchParams.get('vote')) {
         this.setState({ 'page': 'voting'});
       }
+
+    } else {
+      this.setState({ 'page': 'thanks'});
     }
     
   }
@@ -69,12 +72,15 @@ class App extends Component {
       section = <form id='form'></form>;
       formPart1 = formPart;
       formPart2 = this.state.participants.map((participant) =>
-        <li>{generateRadioButtons(participant)}</li>
+        <ul>{generateRadioButtons(participant)}</ul>
       )
+      //let newURL = listURL + '&thanks=true';
       formPart3 = <SubmitButton value={this.state.thisJudge}/>;
       section = <div>{formPart1}{formPart2}{formPart3}</div>;
     } else if (this.state.page == 'judges') {
       section = <ul>{listJudges}</ul>;
+    } else if (this.state.page == 'thanks') {
+      section = endPage;
     }
 
     const listParticipants = this.state.participants.map((participant) =>
@@ -108,6 +114,14 @@ const formPart =
         <p> Indicate your choices for First, Second, and Third places.</p>
   </React.Fragment>
 
+const endPage = 
+  <React.Fragment>
+    <div>
+        <p>Thanks for voting!</p>
+        <p><a href="https://www.vcic.org/">Back to events top</a></p>
+    </div>
+  </React.Fragment>
+
 class SubmitButton extends React.Component {
   constructor(props) {
     super(props);
@@ -124,9 +138,9 @@ class SubmitButton extends React.Component {
 
   render() {
     return (
-      <button type="button" onClick={this.handleClick}>
-        Submit
-      </button>
+        <button type="button" onClick={this.handleClick}>
+          Submit
+        </button>
     )
   }
 }
@@ -148,6 +162,7 @@ function submit(form, judge, sheet) {
   } else {
     console.log(sheet, judge, form['round'].value, form['1button'].value,form['2button'].value, form['3button'].value );
     spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value);
+    window.location.assign(window.location.pathname);
   }
 }
 
