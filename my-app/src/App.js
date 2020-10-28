@@ -162,12 +162,12 @@ function generateRadioButtons(participant) {
   )
 }
 
-function submit(form, judge, sheet) {
+async function submit(form, judge, sheet) {
   if(form['1button'].value == form['2button'].value || form['2button'].value == form['3button'].value || form['1button'].value == form['3button'].value ){
     alert('Do not vote for a team multiple times');
   } else {
     console.log(sheet, judge, form['round'].value, form['1button'].value,form['2button'].value, form['3button'].value );
-    spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value);
+    await spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value);
     window.location.assign(window.location.pathname);
   }
 }
