@@ -71,9 +71,10 @@ class App extends Component {
     if (this.state.page == 'voting') {
       section = <form id='form'></form>;
       formPart1 = formPart;
-      formPart2 = this.state.participants.map((participant) =>
-        <ul>{generateRadioButtons(participant)}</ul>
+      let formPart2rows = this.state.participants.map((participant) =>
+          {generateRadioButtons(participant)}     
       )
+      formPart2 = generateTable(this.state.participants);
       //let newURL = listURL + '&thanks=true';
       formPart3 = <SubmitButton value={this.state.thisJudge}/>;
       section = <div>{formPart1}{formPart2}{formPart3}</div>;
@@ -148,10 +149,15 @@ class SubmitButton extends React.Component {
 function generateRadioButtons(participant) {
   return (
     <React.Fragment>
-      {participant}
-      <input type="radio" id ={participant + ' 1'} name={'1button'} value={participant} />
-      <input type="radio" id ={participant + ' 2'} name={'2button'} value={participant} />
-      <input type="radio" id ={participant + ' 3'} name={'3button'} value={participant} />
+      <tr>
+      <td>{participant}</td>
+      <td></td>
+      <td><input type="radio" id ={participant + ' 1'} name={'1button'} value={participant} /></td>
+      <td></td>
+      <td><input type="radio" id ={participant + ' 2'} name={'2button'} value={participant} /></td>
+      <td></td>
+      <td><input type="radio" id ={participant + ' 3'} name={'3button'} value={participant} /></td>
+      </tr>
     </React.Fragment>
   )
 }
@@ -164,6 +170,16 @@ function submit(form, judge, sheet) {
     spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value);
     window.location.assign(window.location.pathname);
   }
+}
+
+function generateTable(participants) {
+  return (
+  <table>
+    <tr>
+      <th>Team</th><th></th><th>First</th><th></th><th>Second</th><th></th><th>Third</th>
+    </tr>
+    {participants.map(element => generateRadioButtons(element))}
+  </table>);
 }
 
 export default App;
