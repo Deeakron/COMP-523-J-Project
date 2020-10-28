@@ -6,10 +6,15 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 //https://dev.to/calvinpak/how-to-read-write-google-sheets-with-react-193l
 //https://github.com/theoephraim/node-google-spreadsheet
 
-async function initSheet(sheetId) {  
-    var doc = new GoogleSpreadsheet(sheetId);
-    await doc.useServiceAccountAuth(require('./creds.json'));
-    await doc.loadInfo();
+async function initSheet(sheetId) {
+    var doc;
+    try {
+        doc = new GoogleSpreadsheet(sheetId);
+        await doc.useServiceAccountAuth(require('./creds.json'));
+        await doc.loadInfo();
+    } catch(err) {
+        window.location.assign(window.location.pathname+"?error=true");
+    }
     return doc;
 }
 
@@ -64,7 +69,11 @@ export async function getParticipants(sheetId) {
 export async function vote(sheetId, judgeName, event, first, second, third) {
     if (first == second || second == third || first == third) {
         console.error("Do not vote for a team multiple times");
-        return;
+        return false;
+    }
+    if (!event) {
+        console.error("Invalid round");
+        return false;
     }
     var doc = await initSheet(sheetId);
     var rows = await getJudgeRows(doc);
@@ -80,7 +89,7 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
     }
     if (hit !== 1) {
         console.error("Invalid Judge");
-        return;
+        return false;
     }
 
     var col1;
@@ -103,7 +112,7 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
     }
     if (hit !== 3) {
         console.error("Invalid Participant");
-        return;
+        return false;
     }
 
     
@@ -128,5 +137,7 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
         }
     }
     await sheet.saveUpdatedCells();
+    return true;
+
 
 }
