@@ -6,10 +6,15 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 //https://dev.to/calvinpak/how-to-read-write-google-sheets-with-react-193l
 //https://github.com/theoephraim/node-google-spreadsheet
 
-async function initSheet(sheetId) {  
-    var doc = new GoogleSpreadsheet(sheetId);
-    await doc.useServiceAccountAuth(require('./creds.json'));
-    await doc.loadInfo();
+async function initSheet(sheetId) {
+    var doc;
+    try {
+        doc = new GoogleSpreadsheet(sheetId);
+        await doc.useServiceAccountAuth(require('./creds.json'));
+        await doc.loadInfo();
+    } catch(err) {
+        window.location.assign(window.location.pathname+"?error=true");
+    }
     return doc;
 }
 
@@ -62,6 +67,14 @@ export async function getParticipants(sheetId) {
 }
 
 export async function vote(sheetId, judgeName, event, first, second, third) {
+    if (first == second || second == third || first == third) {
+        console.error("Do not vote for a team multiple times");
+        return false;
+    }
+    if (!event) {
+        console.error("Invalid round");
+        return false;
+    }
     var doc = await initSheet(sheetId);
     var rows = await getJudgeRows(doc);
     var cols = await getParticipantCols(doc);
@@ -75,8 +88,8 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
         }
     }
     if (hit !== 1) {
-        console.error("Duplicate or invalid Judge");
-        return;
+        console.error("Invalid Judge");
+        return false;
     }
 
     var col1;
@@ -98,8 +111,8 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
         }
     }
     if (hit !== 3) {
-        console.error("Duplicate or invalid Participant");
-        return;
+        console.error("Invalid Participant");
+        return false;
     }
 
     
@@ -124,31 +137,7 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
         }
     }
     await sheet.saveUpdatedCells();
+    return true;
 
-}
 
-export async function dostuff() {
-    var doc = new GoogleSpreadsheet('194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM');
-    // OR load directly from json file if not in secure environment
-    await doc.useServiceAccountAuth(require('./creds.json'));
-
-    await doc.loadInfo(); // loads document properties and worksheets
-    console.log(doc.title);
-
-    var sheet = doc.sheetsByIndex[0]; // or use doc.sheetsById[id]
-    console.log(sheet.title);
-    console.log(sheet.rowCount);
-
-    await sheet.loadCells('C2:Z2');
-    for (var i = 2; i < 24; i++) {
-        var participant = sheet.getCell(1,i).value;
-        if (participant !== null) {
-            console.log(participant);
-        }
-    }
-
-    var rows = await sheet.getRows();
-    console.log(rows[3].Judges); // 'Larry Page'
-    rows[3].Round = 'test'; // update a value
-    await rows[3].save(); // save updates
 }

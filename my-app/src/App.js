@@ -46,6 +46,9 @@ class App extends Component {
       if (url.searchParams.get('vote')) {
         this.setState({ 'page': 'voting'});
       }
+
+    } else {
+      this.setState({ 'page': 'thanks'});
     }
     
   }
@@ -78,13 +81,17 @@ class App extends Component {
     if (this.state.page == 'voting') {
       section = <form id='form'></form>;
       formPart1 = formPart;
-      formPart2 = this.state.participants.map((participant) =>
-        <li>{generateRadioButtons(participant)}</li>
+      let formPart2rows = this.state.participants.map((participant) =>
+          {generateRadioButtons(participant)}     
       )
+      formPart2 = generateTable(this.state.participants);
+      //let newURL = listURL + '&thanks=true';
       formPart3 = <SubmitButton value={this.state.thisJudge}/>;
       section = <div>{formPart1}{formPart2}{formPart3}</div>;
     } else if (this.state.page == 'judges') {
       section = <ul>{listJudges}</ul>;
+    } else if (this.state.page == 'thanks') {
+      section = endPage;
     }
 
 >>>>>>> 8367078463d6655e3e8da5642c6aaf9e6876b2fa
@@ -119,6 +126,14 @@ const formPart =
         <p> Indicate your choices for First, Second, and Third places.</p>
   </React.Fragment>
 
+const endPage = 
+  <React.Fragment>
+    <div>
+        <p>Thanks for voting!</p>
+        <p><a href="https://www.vcic.org/">Back to events top</a></p>
+    </div>
+  </React.Fragment>
+
 class SubmitButton extends React.Component {
   constructor(props) {
     super(props);
@@ -135,9 +150,9 @@ class SubmitButton extends React.Component {
 
   render() {
     return (
-      <button type="button" onClick={this.handleClick}>
-        Submit
-      </button>
+        <button type="button" onClick={this.handleClick}>
+          Submit
+        </button>
     )
   }
 }
@@ -145,21 +160,38 @@ class SubmitButton extends React.Component {
 function generateRadioButtons(participant) {
   return (
     <React.Fragment>
-      {participant}
-      <input type="radio" id ={participant + ' 1'} name={'1button'} value={participant} />
-      <input type="radio" id ={participant + ' 2'} name={'2button'} value={participant} />
-      <input type="radio" id ={participant + ' 3'} name={'3button'} value={participant} />
+      <tr>
+      <td>{participant}</td>
+      <td></td>
+      <td><input type="radio" id ={participant + ' 1'} name={'1button'} value={participant} /></td>
+      <td></td>
+      <td><input type="radio" id ={participant + ' 2'} name={'2button'} value={participant} /></td>
+      <td></td>
+      <td><input type="radio" id ={participant + ' 3'} name={'3button'} value={participant} /></td>
+      </tr>
     </React.Fragment>
   )
 }
 
-function submit(form, judge, sheet) {
+async function submit(form, judge, sheet) {
   if(form['1button'].value == form['2button'].value || form['2button'].value == form['3button'].value || form['1button'].value == form['3button'].value ){
     alert('Do not vote for a team multiple times');
   } else {
     console.log(sheet, judge, form['round'].value, form['1button'].value,form['2button'].value, form['3button'].value );
-    spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value);
+    if (await spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value)) {
+      window.location.assign(window.location.pathname);
+    }
   }
+}
+
+function generateTable(participants) {
+  return (
+  <table>
+    <tr>
+      <th>Team</th><th></th><th>First</th><th></th><th>Second</th><th></th><th>Third</th>
+    </tr>
+    {participants.map(element => generateRadioButtons(element))}
+  </table>);
 }
 
 export default App;
