@@ -8,13 +8,15 @@ import { GoogleSpreadsheet } from 'google-spreadsheet';
 
 async function initSheet(sheetId) {
     var doc;
-    try {
+    //try {
         doc = new GoogleSpreadsheet(sheetId);
         await doc.useServiceAccountAuth(require('./creds.json'));
         await doc.loadInfo();
-    } catch(err) {
-        window.location.assign(window.location.pathname+"?error=true");
-    }
+    //} catch(err) {
+        //throw err;
+        //return {title:"error"};
+        //window.location.assign(window.location.pathname+"?error=true");
+    //}
     return doc;
 }
 
