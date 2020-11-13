@@ -89,9 +89,8 @@ class App extends Component {
     );
 
     return (
-      <div className="App">
+      <div className="App" color="#f5f5f5">
         <header className="App-header">
-          <img src={logo} className="App-logo" alt="logo" />
           <h1 className="App-title">{this.state.title}</h1>
           <div><form id='form'>{section}</form></div>
         </header>
@@ -151,11 +150,11 @@ function generateRadioButtons(participant) {
     <React.Fragment>
       <tr>
       <td>{participant}</td>
-      <td></td>
+      <td class="td2"></td>
       <td><input type="radio" id ={participant + ' 1'} name={'1button'} value={participant} /></td>
-      <td></td>
+      <td class="td2"></td>
       <td><input type="radio" id ={participant + ' 2'} name={'2button'} value={participant} /></td>
-      <td></td>
+      <td class="td2"></td>
       <td><input type="radio" id ={participant + ' 3'} name={'3button'} value={participant} /></td>
       </tr>
     </React.Fragment>
@@ -176,10 +175,11 @@ function generateTable(participants) {
   return (
   <table>
     <tr>
-      <th>Team</th><th></th><th>First</th><th></th><th>Second</th><th></th><th>Third</th>
+      <th>Team</th><th class="th2"></th><th>First</th><th class="th2"></th><th>Second</th><th class="th2"></th><th>Third</th>
     </tr>
     {participants.map(element => generateRadioButtons(element))}
   </table>);
 }
 
 export default App;
+
