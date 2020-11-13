@@ -1,68 +1,68 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## COMP 523 J - Venture Capital Online Judging
 
-## Available Scripts
+Our project is to create a website for judges from a Venture Capital competition to submit results and have the results be viewed online.
 
-In the project directory, you can run:
+## Getting started
 
-### `npm start`
+### Prerequisites
 
-Runs the app in the development mode.<br />
-Open [http://localhost:3000](http://localhost:3000) to view it in the browser.
+Outside of an IDE, there is no need to download additional software, as everything is included already, such as React.
 
-The page will reload if you make edits.<br />
-You will also see any lint errors in the console.
+### Getting a working development environment
 
-### `npm test`
+In order to get a working development environment, once you have installed/opened up your IDE, unzip the unbuilt-app.zip file, and put it into your working directory.
 
-Launches the test runner in the interactive watch mode.<br />
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Running Locally
 
-### `npm run build`
+In order to run locally, use the command "npm start" in the console to start up a developmental version of the app in your browser at [http://localhost:3000](http://localhost:3000). It will update in response to changes in the code.
 
-Builds the app for production to the `build` folder.<br />
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### Warranty
 
-The build is minified and the filenames include the hashes.<br />
-Your app is ready to be deployed!
+This code was last tested and verified to work on 11/13/2020, by Luke Wheeler on Windows 10.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+## Testing
 
-### `npm run eject`
+### Running the test suite
 
-**Note: this is a one-way operation. Once you `eject`, you can’t go back!**
+In order to test, use "npm run test".
 
-If you aren’t satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+## Deployment
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you’re on your own.
+The app will be deployed in the ~/public_html/voting/ directory on the client’s SiteGround server. When unzipping the built-app.zip, the client should place the “voting” directory into the “public_html” folder.
 
-You don’t have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn’t feel obligated to use this feature. However we understand that this tool wouldn’t be useful if you couldn’t customize it when you are ready for it.
+The production version of the code is in unbuilt-app.zip. For turning production code into a new built-app.zip, use "npm run build".
 
-## Learn More
+The website is hosted by SiteGround, and the app uses React to contact the Google Sheets API.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## Technologies Used
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+React and the Google Sheets API are the technologies used directly with the software.
 
-### Code Splitting
+For info about the ADRs, look at "ADRs.md".
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/code-splitting
+## Contributing
 
-### Analyzing the Bundle Size
+In order to contribute, the developer needs the unbuilt-app.zip file.
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size
+### Conventions
 
-### Making a Progressive Web App
+For conventions regarding the technologies, there is the ReactREADME.md file for React. It also says how to use the testing suite. For the google sheets API:
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app
+https://dev.to/calvinpak/how-to-read-write-google-sheets-with-react-193l
+https://github.com/theoephraim/node-google-spreadsheet
 
-### Advanced Configuration
+### Project Info
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
+https://github.com/Deeakron/COMP-523-J/blob/gh-pages/index.md
 
-### Deployment
+## Authors
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
+Luke Wheeler, Matthew Wheeler, Nathan Schwartz
 
-### `npm run build` fails to minify
+## License
 
-This section has moved here: https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify
+For license info, look at "LICENSE".
+
+## Acknowledgements
+
+We would like to thank our teacher Jeff Terrell for providing this learning experience and our mentor Nick Auger for guiding us along the way.
