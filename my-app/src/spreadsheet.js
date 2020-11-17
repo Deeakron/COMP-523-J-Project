@@ -1,36 +1,48 @@
 import { GoogleSpreadsheet } from 'google-spreadsheet';
 
-// spreadsheet key is the long id in the sheets URL
-//const doc = new GoogleSpreadsheet('194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM');
+//Test SheetId 194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM
+//Example url: http://localhost:3000?sheetId=194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM
 
-//https://dev.to/calvinpak/how-to-read-write-google-sheets-with-react-193l
+/* Resources used to access Google Spreadsheet */
 //https://github.com/theoephraim/node-google-spreadsheet
 
+/* Resources used to integrate Google Spreadsheet with React */
+//https://dev.to/calvinpak/how-to-read-write-google-sheets-with-react-193l
+
+
+/* Initialize the Google Sheet. This is required before any data can be accessed.
+ * Input: sheetId for the Google Sheet
+ * Output: doc object. This holds all of the sheet information. */
 async function initSheet(sheetId) {
-    var doc;
-    //try {
-        doc = new GoogleSpreadsheet(sheetId);
-        await doc.useServiceAccountAuth(require('./creds.json'));
-        await doc.loadInfo();
-    //} catch(err) {
-        //throw err;
-        //return {title:"error"};
-        //window.location.assign(window.location.pathname+"?error=true");
-    //}
+    var doc = new GoogleSpreadsheet(sheetId);
+
+    //Make sure creds.json is up-to-date before using this!
+    await doc.useServiceAccountAuth(require('./creds.json'));
+    
+    await doc.loadInfo();
     return doc;
 }
 
+/* Get the title of a Google Sheet.
+ * Input: sheetId for the Google Sheet
+ * Output: string. This is the Sheet Title. */
 export async function getTitle(sheetId) {
     var doc = await initSheet(sheetId);
     return doc.title;
 }
 
+/* Get each row that contains a judge.
+ * Input: doc object
+ * Output: row object. This contains the row information. */
 async function getJudgeRows(doc) {
     var sheet = doc.sheetsByIndex[0];
     var rows = await sheet.getRows();
     return rows;
 }
 
+/* Get each judge's name.
+ * Input: sheetId for the Google Sheet
+ * Output: array of strings */
 export async function getJudges(sheetId) {
     var doc = await initSheet(sheetId);
     var rows = await getJudgeRows(doc);
@@ -43,6 +55,9 @@ export async function getJudges(sheetId) {
 
 }
 
+/* Get each column that contains a participant.
+ * Input: doc object
+ * Output: array of cell objects. This contains the cell information. */
 async function getParticipantCols(doc) {
     var sheet = doc.sheetsByIndex[0];
     await sheet.loadCells('C2:Z2');
@@ -57,6 +72,9 @@ async function getParticipantCols(doc) {
     return cols;
 }
 
+/* Get each participant's name.
+ * Input: sheetId for the Google Sheet
+ * Output: array of strings */
 export async function getParticipants(sheetId) {
     var doc = await initSheet(sheetId);
     var cols = await getParticipantCols(doc);
@@ -68,6 +86,15 @@ export async function getParticipants(sheetId) {
     return participantsArray;
 }
 
+/* Vote for 1st, 2nd, and 3rd place.
+ * Input: 
+    * sheetId for the Google Sheet
+    * Judge Name
+    * Event name
+    * 1st Place participant 
+    * 2nd Place participant
+    * 3rd Place participant
+ * Output: boolean indicating success or failure */
 export async function vote(sheetId, judgeName, event, first, second, third) {
     if (first == second || second == third || first == third) {
         console.error("Do not vote for a team multiple times");
