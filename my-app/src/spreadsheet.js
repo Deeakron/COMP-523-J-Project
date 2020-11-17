@@ -18,7 +18,7 @@ async function initSheet(sheetId) {
 
     //Make sure creds.json is up-to-date before using this!
     await doc.useServiceAccountAuth(require('./creds.json'));
-    
+
     await doc.loadInfo();
     return doc;
 }
@@ -49,7 +49,10 @@ export async function getJudges(sheetId) {
 
     var judgeArray = []
     for (var i = 1; i < rows.length; i++) {
-        judgeArray.push(rows[i].Judges);
+        if (rows[i].Judges && !(rows[i].Judges in judgeArray)) {
+            console.log(rows[i].Judges);
+            judgeArray.push(rows[i].Judges);
+        }
     }
     return judgeArray;
 
@@ -90,17 +93,17 @@ export async function getParticipants(sheetId) {
  * Input: 
     * sheetId for the Google Sheet
     * Judge Name
-    * Event name
+    * Round name
     * 1st Place participant 
     * 2nd Place participant
     * 3rd Place participant
  * Output: boolean indicating success or failure */
-export async function vote(sheetId, judgeName, event, first, second, third) {
+export async function vote(sheetId, judgeName, round, first, second, third) {
     if (first == second || second == third || first == third) {
         console.error("Do not vote for a team multiple times");
         return false;
     }
-    if (!event) {
+    if (!round || (round != "Due Diligence" && round != "Written Deliverables" && round != "Partner Meeting")) {
         console.error("Invalid round");
         return false;
     }
@@ -116,6 +119,14 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
             row = rows[i].rowNumber-1;
         }
     }
+    if (round == "Due Diligence") {
+        row = row + 0;
+    } else if (round == "Written Deliverables") {
+        row = row + 1;
+    } else if (round == "Partner Meeting") {
+        row = row + 2;
+    }
+
     if (hit !== 1) {
         console.error("Invalid Judge");
         return false;
@@ -148,7 +159,7 @@ export async function vote(sheetId, judgeName, event, first, second, third) {
     var sheet = doc.sheetsByIndex[0];
     var range = 'A'+row-+':Z'+row;
     await sheet.loadCells(range);
-    sheet.getCell(row,1).value = event;
+    sheet.getCell(row,1).value = round;
 
     for (j = 0; j < cols.length; j++) {
         var index = j+2;

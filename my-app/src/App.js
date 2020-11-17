@@ -38,8 +38,10 @@ class App extends Component {
         this.setState({ 'page': 'voting'});
       }
 
-    } else {
+    } else if (url.searchParams.get('thanks')) {
       this.setState({ 'page': 'thanks'});
+    } else {
+      this.setState({ 'page': 'default'});
     }
     
   }
@@ -47,7 +49,7 @@ class App extends Component {
   // Rendering the Page
   render() {
     const listURL = this.state.judges.map((judge) =>
-      [`/?sheetId=${sheetId}&judge=${judge}&vote=true`,judge]
+      [`./?sheetId=${sheetId}&judge=${judge}&vote=true`,judge]
     );
 
     const listJudges = listURL.map((url) =>
@@ -65,8 +67,12 @@ class App extends Component {
       section = <div>{formPart1}{formPart2}{formPart3}</div>;
     } else if (this.state.page === 'judges') {
       section = <ul>{listJudges}</ul>;
-    } else if (this.state.page === 'thanks') {
-      section = endPage;
+    } else {
+      if (this.state.page == 'thanks') {
+        section = <div><p>Thanks for voting!</p>{endPage}<br/><br/><p><button onclick="window.history.back()">Vote again</button></p></div>;
+      } else {
+        section = <div>{endPage}</div>;
+      }
     }
 
     return (
@@ -97,10 +103,9 @@ const formPart =
   </React.Fragment>
 
 // Outside constant for the end page
-const endPage = 
+var endPage = 
   <React.Fragment>
     <div>
-        <p>Thanks for voting!</p>
         <p><a href="https://www.vcic.org/">Back to events top</a></p>
     </div>
   </React.Fragment>
@@ -151,7 +156,9 @@ async function submit(form, judge, sheet) {
   } else {
     console.log(sheet, judge, form['round'].value, form['1button'].value,form['2button'].value, form['3button'].value );
     if (await spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value)) {
-      window.location.assign(window.location.pathname);
+      var page = window.location.pathname;
+      page += "?thanks=true"
+      window.location.assign(page);
     }
   }
 }
