@@ -1,17 +1,7 @@
 import React, { Component } from "react";
-import logo from "./logo.svg";
 import "./App.css";
 
 import * as spreadsheet from "./spreadsheet";
-
-(async () => {
-  //var sheetId = '194iz66ka28ejiDV6_iHtGyV7V6gK8QSl9eFb8cMC1IM';
-  //await spreadsheet.vote(sheetId, 'Judge A', 'Due Diligence', 'Elm', 'Birch', 'Fir');
-  //await spreadsheet.vote(sheetId, 'Judge B', 'Partner Meeting', 'Birch', 'Ash', 'Dogwood');
-  //await spreadsheet.vote(sheetId, 'Judge C', 'Written Deliverables', 'Dogwood', 'Birch', 'Cherry');
-  //await spreadsheet.vote(sheetId, 'Judge D', 'Due Diligence', 'Cherry', 'Dogwood', 'Ash');
-  //await spreadsheet.vote(sheetId, 'Judge E', 'Partner Meeting', 'Ash', 'Fir', 'Elm');
-})();
 
 var sheetId;
 
@@ -22,6 +12,7 @@ class App extends Component {
     this.state = { sheetId: "", thisJudge: "", title: "", judges: [], participants: [], page: 'judges'};
   }
 
+  // Loading the Page
   async componentDidMount() {
     var url = new URL(window.location.href);
     
@@ -53,7 +44,7 @@ class App extends Component {
     
   }
 
-
+  // Rendering the Page
   render() {
     const listURL = this.state.judges.map((judge) =>
       [`/?sheetId=${sheetId}&judge=${judge}&vote=true`,judge]
@@ -62,31 +53,21 @@ class App extends Component {
     const listJudges = listURL.map((url) =>
       <li><a href={url[0]}>{url[1]}</a></li>
     );
-    /*const listJudges = this.state.judges.map((judge) =>
-      <li><a href="/?vote=true">{judge}</a></li>
-    );*/
+    // Various Parts of the form, conditional on what the current page is
     var formPart1 = <div></div>;
     var formPart2 = <div></div>;
     var formPart3 = <div></div>;
-    if (this.state.page == 'voting') {
+    if (this.state.page === 'voting') {
       section = <form id='form'></form>;
       formPart1 = formPart;
-      let formPart2rows = this.state.participants.map((participant) =>
-          {generateRadioButtons(participant)}     
-      )
       formPart2 = generateTable(this.state.participants);
-      //let newURL = listURL + '&thanks=true';
       formPart3 = <SubmitButton value={this.state.thisJudge}/>;
       section = <div>{formPart1}{formPart2}{formPart3}</div>;
-    } else if (this.state.page == 'judges') {
+    } else if (this.state.page === 'judges') {
       section = <ul>{listJudges}</ul>;
-    } else if (this.state.page == 'thanks') {
+    } else if (this.state.page === 'thanks') {
       section = endPage;
     }
-
-    const listParticipants = this.state.participants.map((participant) =>
-      <li>{participant}</li>
-    );
 
     return (
       <div className="App" color="#f5f5f5">
@@ -99,21 +80,23 @@ class App extends Component {
   }
 }
 
+// Outside constant for creating the round selection part of the form
 const formPart = 
   <React.Fragment>
         <p> Round: </p>
-        <div>
-          <input type="radio" id ="Due Diligence" name="round" value="Due Diligence" />
-          <label for="Due Diligence">Due Diligence</label>
-          <input type="radio" id ="Written Deliverables" name="round" value="Written Deliverables" />
-          <label for="Written Deliverables">Written Deliverables</label>
-          <input type="radio" id ="Partner Meeting" name="round" value="Partner Meeting" />
-          <label for="Partner Meeting">Partner Meeting</label>
-        </div>
+        <table> <tr>
+          <td class="td3"><input type="radio" id ="Due Diligence" name="round" value="Due Diligence" />
+          <label for="Due Diligence">Due Diligence</label></td>
+          <td class="td3"><input type="radio" id ="Written Deliverables" name="round" value="Written Deliverables" />
+          <label for="Written Deliverables">Written Deliverables</label></td>
+          <td class="td3"><input type="radio" id ="Partner Meeting" name="round" value="Partner Meeting" />
+          <label for="Partner Meeting">Partner Meeting</label></td>
+        </tr></table>
         <p> Vote: </p>
         <p> Indicate your choices for First, Second, and Third places.</p>
   </React.Fragment>
 
+// Outside constant for the end page
 const endPage = 
   <React.Fragment>
     <div>
@@ -122,6 +105,7 @@ const endPage =
     </div>
   </React.Fragment>
 
+// Outside class for the submit button
 class SubmitButton extends React.Component {
   constructor(props) {
     super(props);
@@ -131,8 +115,6 @@ class SubmitButton extends React.Component {
   }
 
   handleClick = async () => {
-    //console.log(this.props.value);
-    //console.log(this.state.parent['1button'].value);
     submit(this.state.parent, this.props.value, sheetId);
   }
 
@@ -145,6 +127,7 @@ class SubmitButton extends React.Component {
   }
 }
 
+// Generating the rows of radio buttons
 function generateRadioButtons(participant) {
   return (
     <React.Fragment>
@@ -161,8 +144,9 @@ function generateRadioButtons(participant) {
   )
 }
 
+// Actually submitting the results to the google form; if any team is selected twice or more it does not submit
 async function submit(form, judge, sheet) {
-  if(form['1button'].value == form['2button'].value || form['2button'].value == form['3button'].value || form['1button'].value == form['3button'].value ){
+  if(form['1button'].value === form['2button'].value || form['2button'].value === form['3button'].value || form['1button'].value === form['3button'].value ){
     alert('Do not vote for a team multiple times');
   } else {
     console.log(sheet, judge, form['round'].value, form['1button'].value,form['2button'].value, form['3button'].value );
@@ -172,6 +156,7 @@ async function submit(form, judge, sheet) {
   }
 }
 
+// Outside function for generating tables
 function generateTable(participants) {
   return (
   <table>
