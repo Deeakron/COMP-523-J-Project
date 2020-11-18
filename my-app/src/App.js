@@ -55,6 +55,12 @@ class App extends Component {
     const listJudges = listURL.map((url) =>
       <li><a href={url[0]}>{url[1]}</a></li>
     );
+
+    function handleBack(event) {
+      event.preventDefault();
+      window.history.back();
+    }
+
     // Various Parts of the form, conditional on what the current page is
     var formPart1 = <div></div>;
     var formPart2 = <div></div>;
@@ -69,7 +75,7 @@ class App extends Component {
       section = <ul>{listJudges}</ul>;
     } else {
       if (this.state.page == 'thanks') {
-        section = <div><p>Thanks for voting!</p>{endPage}<br/><br/><p><button onclick="window.history.back()">Vote again</button></p></div>;
+        section = <div><p>Thanks for voting!</p><p><button onClick={handleBack}><font size="5">Vote again</font></button></p><br/><br/>{endPage}</div>;
       } else {
         section = <div>{endPage}</div>;
       }
@@ -126,7 +132,7 @@ class SubmitButton extends React.Component {
   render() {
     return (
         <button type="button" onClick={this.handleClick}>
-          Submit
+          <font size="5">Submit</font>
         </button>
     )
   }
@@ -151,10 +157,14 @@ function generateRadioButtons(participant) {
 
 // Actually submitting the results to the google form; if any team is selected twice or more it does not submit
 async function submit(form, judge, sheet) {
-  if(form['1button'].value === form['2button'].value || form['2button'].value === form['3button'].value || form['1button'].value === form['3button'].value ){
-    alert('Do not vote for a team multiple times');
+  if(form['1button'].value === "" || form['2button'].value === "" || form['3button'].value === "") {
+    alert('Please select a team for each place');
+  } else if (form['1button'].value === form['2button'].value || form['2button'].value === form['3button'].value || form['1button'].value === form['3button'].value ){
+    alert('Please do not select a team more than once');
+  } else if (form['round'].value === "") {
+    alert('You must select a round');
   } else {
-    console.log(sheet, judge, form['round'].value, form['1button'].value,form['2button'].value, form['3button'].value );
+    //console.log(sheet, judge, form['round'].value, form['1button'].value,form['2button'].value, form['3button'].value );
     if (await spreadsheet.vote(sheetId,judge,form['round'].value,form['1button'].value,form['2button'].value, form['3button'].value)) {
       var page = window.location.pathname;
       page += "?thanks=true"
